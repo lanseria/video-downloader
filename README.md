@@ -1,8 +1,4 @@
-<p align="center">
-    <img width="400" src="https://github.com/ArcherGu/fast-vite-electron/blob/main/logo.png" alt="logo">
-</p>
-
-# ⚡Vite + Electron & Esbuild Template
+# Video Downloader
 
 This template is used to build vite + electron projects.
 
@@ -14,12 +10,13 @@ In the past, I've been building desktop clients with [vue](https://v3.vuejs.org/
 
 The advent of [vite](https://vitejs.dev/) and [esbuild](https://esbuild.github.io/) greatly improved the development experience and made me feel lightning fast ⚡.
 
- It took me a little time to extract this template and thank you for using it.
+It took me a little time to extract this template and thank you for using it.
 
 ## How to use
 
 - Click the [Use this template](https://github.com/ArcherGu/fast-vite-electron/generate) button (you must be logged in) or just clone this repo.
-- In the project folder: 
+- In the project folder:
+
   ```bash
   # install dependencies
   yarn # npm install
