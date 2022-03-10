@@ -19,7 +19,7 @@ It took me a little time to extract this template and thank you for using it.
 
   ```bash
   # install dependencies
-  yarn # npm install
+  pnpm i --frozen-lockfile
 
   # run in developer mode
   yarn dev # npm run dev
