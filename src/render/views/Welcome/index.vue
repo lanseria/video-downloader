@@ -6,7 +6,7 @@
       </n-icon>
     </template>
     <template #extra>
-      <n-button size="small" @click="open()">看看别的</n-button>
+      <n-button @click="open()">看看别的</n-button>
     </template>
   </n-empty>
 </template>
@@ -16,6 +16,6 @@ import { Airplane as AirplaneIcon } from "@vicons/ionicons5";
 import { useImpRoute } from "@render/hooks/useRoute";
 const { pushPath } = useImpRoute();
 const open = () => {
-  pushPath("/media-srt");
+  pushPath("/dashboard");
 };
 </script>

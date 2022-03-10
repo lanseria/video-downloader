@@ -3,7 +3,7 @@
     <n-layout-header class="nav" bordered>
       <n-text tag="div" class="ui-logo" :depth="1" @click="goHome()">
         <img src="@render/assets/logo.png" />
-        <span>Media Srt Tools</span>
+        <span>Video Downloader Tools</span>
       </n-text>
 
       <div></div>

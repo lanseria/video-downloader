@@ -36,7 +36,7 @@
 <script lang="ts" setup>
 import { h, computed } from "vue";
 import { NLayout, NLayoutSider, NMenu, NIcon } from "naive-ui";
-import { mediaSrtRoute } from "../MediaSrt/route";
+import { dashboardRoute } from "../Dashboard/route";
 import { useImpRoute } from "@render/hooks/useRoute";
 import { useAppStore } from "@render/store/modules/app";
 /**
@@ -68,7 +68,7 @@ const collapsed = computed(() => {
 const handleUpdateValue = (key: string) => {
   pushName(key);
 };
-const options = mediaSrtRoute
+const options = dashboardRoute
   .filter((m) => !m.meta.hidden)
   .map((m) => {
     return {
