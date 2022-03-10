@@ -14,7 +14,7 @@ async function createWindow() {
       height: 800,
       webPreferences: {
         nodeIntegration: true,
-        webSecurity: false,
+        webSecurity: true,
         contextIsolation: false,
         devTools: isDev,
       },
