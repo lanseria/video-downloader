@@ -7,7 +7,7 @@ export class DashboardDatabase extends Dexie {
     super("DashboardDatabase");
     this.version(1).stores({
       configs:
-        "++id, updatedAt, TENCENT_SECRET_ID, TENCENT_SECRET_KEY, TENCENT_COS_BUCKET, TENCENT_COS_REGION",
+        "++id, updatedAt, ignoreError, abortOnError, dumpUserAgent, ignoreConfig, proxy, socketTimeout, dist",
     });
   }
 }

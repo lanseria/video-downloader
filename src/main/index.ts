@@ -6,10 +6,10 @@ import { bootstrap, destroy } from "./bootstrap";
 const isDev = !app.isPackaged;
 
 process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
-
+let mainWindow: BrowserWindow;
 async function createWindow() {
   try {
-    const win = new BrowserWindow({
+    mainWindow = new BrowserWindow({
       width: 1000,
       height: 800,
       webPreferences: {
@@ -21,25 +21,25 @@ async function createWindow() {
       autoHideMenuBar: !isDev,
     });
 
-    win.maximize();
+    mainWindow.maximize();
 
-    await bootstrap(win.webContents);
+    await bootstrap(mainWindow.webContents);
 
     const URL = isDev
       ? process.env.DEV_SERVER_URL
       : `file://${join(app.getAppPath(), "dist/render/index.html")}`;
 
-    win.loadURL(URL);
+    mainWindow.loadURL(URL);
 
     if (isDev) {
-      win.webContents.openDevTools();
+      mainWindow.webContents.openDevTools();
     } else {
-      win.removeMenu();
+      mainWindow.removeMenu();
     }
 
-    win.on("closed", () => {
+    mainWindow.on("closed", () => {
       destroy();
-      win.destroy();
+      mainWindow.destroy();
     });
   } catch (error) {
     console.log(error);
@@ -74,3 +74,5 @@ if (isDev) {
     });
   }
 }
+
+export { mainWindow };

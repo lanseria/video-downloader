@@ -16,6 +16,11 @@ declare interface ImportData {
   data: string;
 }
 
+declare interface OpenedFolder {
+  id: string;
+  path: string;
+}
+
 declare interface RecAudioData {
   id: number;
   step: number;
