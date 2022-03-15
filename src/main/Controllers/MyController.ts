@@ -8,15 +8,46 @@ import { FileService } from "@main/Services/FileService";
 export class MyController {
   constructor(private myService: MyService, private fileService: FileService) {}
 
+  @IpcOn(EVENTS.REPLY_SAVE_FILE)
+  public replySaveFile(filepath: string) {
+    return filepath;
+  }
+
   @IpcOn(EVENTS.REPLY_OPEN_IMPORT_FILE)
   public replyOpenImportFile(data: Partial<ImportData>) {
     const importData = new ImportJson(data);
     return importData;
   }
+
   @IpcOn(EVENTS.REPLY_OPEN_DIST_FOLDER)
   public replyOpenDistFolder(data: Partial<OpenedFolder>) {
     const openedFoler = new OpenedFolderData(data);
     return openedFoler;
+  }
+
+  @IpcInvoke(EVENTS.SAVE_FILE)
+  public async handleSaveFile({
+    title,
+    path,
+    data,
+  }: {
+    title: string;
+    path: string;
+    data: IObj;
+  }) {
+    this.fileService.onSaveFile(title, path).then((file) => {
+      if (!file.canceled) {
+        const filepath = file.filePath!.toString();
+        // Creating and Writing to the sample.json file
+        writeJson(filepath, data)
+          .then(() => {
+            this.replySaveFile(filepath);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    });
   }
 
   @IpcInvoke(EVENTS.OPEN_IMPORT_FILE)
@@ -52,9 +83,7 @@ export class MyController {
           id,
         });
       } else {
-        const path = await readFile(folderObj.filePaths[0], {
-          encoding: "utf-8",
-        });
+        const path = folderObj.filePaths[0];
         this.replyOpenDistFolder({
           id,
           path,

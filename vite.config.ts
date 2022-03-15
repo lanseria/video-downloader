@@ -40,4 +40,12 @@ export default defineConfig({
     outDir: join(__dirname, "dist/render"),
     emptyOutDir: true,
   },
+  optimizeDeps: {
+    include: [
+      "@vueuse/core",
+      "@vicons/ionicons5",
+      "nanoid",
+      "indexeddb-export-import",
+    ],
+  },
 });

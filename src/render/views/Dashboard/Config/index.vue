@@ -145,6 +145,27 @@ const data = useObservable<IConfig[]>(
 const saveLoading = computed(() => {
   return fileStore.saveLoading;
 });
+// mouted
+onMounted(() => {
+  ipc.on(EVENTS.REPLY_SAVE_FILE, (filepath) => {
+    window.$message.success(`导出成功: ${filepath}`);
+  });
+  ipc.on(EVENTS.REPLY_OPEN_IMPORT_FILE, (obj: ImportData) => {
+    db.open().then(() => {
+      const idbDatabase = db.backendDB();
+      IDBExportImport.clearDatabase(idbDatabase, (err) => {
+        if (!err) {
+          // cleared data successfully
+          IDBExportImport.importFromJsonString(idbDatabase, obj.data, (err) => {
+            if (!err) {
+              window.$message.success("导入成功, 请重新进入");
+            }
+          });
+        }
+      });
+    });
+  });
+});
 // methods
 const handleAdd = () => {
   ConfigModalRef.value.open();
@@ -160,7 +181,7 @@ const handleExport = () => {
         console.error(err);
       } else {
         console.log("Exported as JSON: " + jsonString);
-        const filename = `media-srt-${+dayjs()}.json`;
+        const filename = `config-${+dayjs()}.json`;
         fileStore.saveFileDialog("导出数据", filename, JSON.parse(jsonString));
       }
     });

@@ -59,6 +59,7 @@ const modelRef = ref(new ConfigForm());
 onMounted(() => {
   ipc.on(EVENTS.REPLY_OPEN_DIST_FOLDER, (obj: OpenedFolder) => {
     console.log(obj);
+    modelRef.value.dist = obj.path;
   });
 });
 // methods
