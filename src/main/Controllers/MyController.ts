@@ -9,17 +9,34 @@ export class MyController {
   constructor(private myService: MyService, private fileService: FileService) {}
 
   @IpcOn(EVENTS.REPLY_SAVE_FILE)
+  /**
+   * `replySaveFile` is a function that takes a string and returns a string
+   * @param {string} filepath - The path to the file that you want to save.
+   * @returns The filepath.
+   */
   public replySaveFile(filepath: string) {
     return filepath;
   }
 
   @IpcOn(EVENTS.REPLY_OPEN_IMPORT_FILE)
+  /**
+   * `replyOpenImportFile` is a function that takes a partial ImportData object and returns an
+   * ImportJson object
+   * @param data - Partial<ImportData>
+   * @returns The ImportJson object.
+   */
   public replyOpenImportFile(data: Partial<ImportData>) {
     const importData = new ImportJson(data);
     return importData;
   }
 
   @IpcOn(EVENTS.REPLY_OPEN_DIST_FOLDER)
+  /**
+   * `replyOpenDistFolder` is a function that takes a `Partial<OpenedFolder>` and returns an
+   * `OpenedFolderData`
+   * @param data - Partial<OpenedFolder>
+   * @returns The `replyOpenDistFolder` method returns an `OpenedFolderData` object.
+   */
   public replyOpenDistFolder(data: Partial<OpenedFolder>) {
     const openedFoler = new OpenedFolderData(data);
     return openedFoler;

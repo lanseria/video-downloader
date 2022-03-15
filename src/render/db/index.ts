@@ -2,12 +2,14 @@ import Dexie from "dexie";
 
 export class DashboardDatabase extends Dexie {
   configs!: Dexie.Table<IConfig, number>;
+  tasks!: Dexie.Table<ITask, number>;
 
   constructor() {
     super("DashboardDatabase");
-    this.version(1).stores({
+    this.version(2).stores({
       configs:
         "++id, updatedAt, ignoreError, abortOnError, dumpUserAgent, ignoreConfig, proxy, socketTimeout, dist",
+      tasks: "++id, updatedAt, name, progress, urls, configs",
     });
   }
 }
@@ -26,4 +28,12 @@ export interface IConfig extends ICommon {
   socketTimeout: number; // Time to wait before giving up, in  seconds 放弃前的等待时间，以秒为单位
   dist: string; //
 }
+
+export interface ITask extends ICommon {
+  name: string;
+  progress: number;
+  urls: string[];
+  configs: IConfig;
+}
+
 export const db = new DashboardDatabase();

@@ -15,6 +15,11 @@ export function mergeProperties<T>(distObject: T, srcObject: IObj) {
   };
 }
 
+/**
+ * Serialize an object to a string
+ * @param value - The value to be serialized.
+ * @returns The serialized object.
+ */
 export const serialize = (value) => {
   if (typeof value === "function") {
     return value.toString();
@@ -30,6 +35,11 @@ export const serialize = (value) => {
   return value;
 };
 
+/**
+ * Deserialize a string that represents a function or an object
+ * @param valueNew - The value to be deserialized.
+ * @returns The deserialized object.
+ */
 export function deserialize(valueNew) {
   if (valueNew.toLowerCase().startsWith("function(")) {
     return Function('"use strict";return ' + valueNew);
@@ -45,7 +55,11 @@ export function deserialize(valueNew) {
   return valueNew;
 }
 
-//字幕时间戳转换
+/**
+ * Convert a number of seconds into an SRT timestamp
+ * @param {number} seconds - The number of seconds to convert to an SRT timestamp.
+ * @returns a string that is formatted as a SRT timestamp.
+ */
 export function srtTimestamp(seconds: number) {
   let $milliseconds = seconds + 0;
 
@@ -70,6 +84,16 @@ export function srtTimestamp(seconds: number) {
     $milliseconds
   );
 }
+/**
+ * Create a subtitle text string from the given parameters
+ * @param {number} index - The index of the subtitle.
+ * @param {number} startTime - The start time of the subtitle in milliseconds.
+ * @param {number} endTime - The end time of the subtitle.
+ * @param {string} text - The text of the subtitle.
+ * @param [isLast=false] - boolean
+ * @returns A string that represents a subtitle in the srt format.
+ */
+
 export function makeSubtitleText(
   index: number,
   startTime: number,
@@ -91,8 +115,12 @@ ${text}
   return lineStr;
 }
 
+/**
+ * It takes in an array of subtitles and returns a string of the srt file.
+ * @param {SubtitlesItem[]} subtitles - The subtitles to be converted to SRT.
+ * @returns a string that is the concatenation of the lines of the subtitles.
+ */
 export function buildFile(subtitles: SubtitlesItem[]) {
-  // 生成 Srt 文件
   let index = 0;
   let srtText = "";
   subtitles.forEach((m, i) => {
@@ -109,6 +137,11 @@ export function buildFile(subtitles: SubtitlesItem[]) {
   return srtText;
 }
 
+/**
+ * Convert a string of SRT formatted subtitles to WebVTT format
+ * @param {string} data - The subtitle file contents.
+ * @returns a string.
+ */
 export function srt2webvtt(data: string) {
   // remove dos newlines
   var srt = data.replace(/\r+/g, "");
@@ -125,9 +158,13 @@ export function srt2webvtt(data: string) {
       result += convertSrtCue(cuelist[i]);
     }
   }
-
   return result;
 }
+/**
+ * Convert a single SRT caption into a single cue
+ * @param {string} caption - The caption file to convert.
+ * @returns a string.
+ */
 
 function convertSrtCue(caption: string) {
   // remove all html tags for security reasons
