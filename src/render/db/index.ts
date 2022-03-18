@@ -6,10 +6,10 @@ export class DashboardDatabase extends Dexie {
 
   constructor() {
     super("DashboardDatabase");
-    this.version(2).stores({
+    this.version(3).stores({
       configs:
         "++id, updatedAt, ignoreError, abortOnError, dumpUserAgent, ignoreConfig, proxy, socketTimeout, dist",
-      tasks: "++id, updatedAt, name, progress, urls, configs",
+      tasks: "++id, updatedAt, title, progress, webpage_url, thumbnail, config",
     });
   }
 }
@@ -30,10 +30,11 @@ export interface IConfig extends ICommon {
 }
 
 export interface ITask extends ICommon {
-  name: string;
+  title: string;
   progress: number;
-  urls: string[];
-  configs: IConfig;
+  webpage_url: string;
+  thumbnail: string;
+  config: IConfig;
 }
 
 export const db = new DashboardDatabase();

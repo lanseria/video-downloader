@@ -56,17 +56,42 @@ import { useObservable } from "@vueuse/rxjs";
 import { liveQuery } from "dexie";
 import { Observable } from "rxjs";
 import TaskModal from "./TaskModal.vue";
+import { EVENTS } from "@common/events";
+import { ipcInstance, useIpc } from "@render/plugins";
+import { IpcOn } from "@main/decorators";
+// useIpc
+const ipc = useIpc();
 const columns = [
   {
     title: "id",
     key: "id",
   },
   {
-    title: "名称",
-    key: "name",
+    title: "标题",
+    key: "title",
+    render: (row: ITask, rowIndex: number) => {
+      return h(
+        NSpace,
+        {
+          vertical: true,
+        },
+        {
+          default: () => {
+            return [
+              row.title,
+              h("img", {
+                referrerpolicy: "no-referrer",
+                width: "200",
+                src: row.thumbnail,
+              }),
+            ];
+          },
+        }
+      );
+    },
   },
   {
-    title: "进度",
+    title: "进度(%)",
     key: "progress",
   },
   {
@@ -79,16 +104,20 @@ const columns = [
             h(
               NButton,
               {
+                type: "primary",
                 tertiary: true,
                 size: "small",
+                onClick: () => handleDownload(row),
               },
-              { default: () => "暂停" }
+              { default: () => "下载" }
             ),
             h(
               NButton,
               {
+                disabled: ![0, 100].includes(row.progress),
                 tertiary: true,
                 size: "small",
+                onClick: () => handleDelete(row),
               },
               { default: () => "删除" }
             ),
@@ -108,6 +137,21 @@ const data = useObservable<ITask[]>(
     db.tasks.orderBy("updatedAt").reverse().toArray()
   ) as unknown as Observable<ITask[]>
 );
+// mounted
+onMounted(() => {
+  ipc.on(EVENTS.REPLY_DOWNLOAD_FILE, (data: ITask) => {
+    db.tasks.put(data);
+  });
+});
+// methods
+const handleDownload = (row: ITask) => {
+  console.log(row);
+  ipcInstance.send(EVENTS.DOWNLOAD_FILE, row);
+};
+const handleDelete = (row: ITask) => {
+  console.log(row);
+  db.tasks.delete(row.id);
+};
 const handleAdd = () => {
   TaskModalRef.value.open();
 };

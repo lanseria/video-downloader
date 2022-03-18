@@ -1,9 +1,12 @@
 import { Controller, IpcInvoke, IpcOn } from "../decorators";
 import { MyService } from "../Services/MyService";
 import { EVENTS } from "@common/events";
+import youtubedl, { YtResponse, exec } from "youtube-dl-exec";
 import { ImportJson, OpenedFolderData, UploadMedia } from "@common/dto";
 import { readFile, writeJson } from "@main/utils/fs";
 import { FileService } from "@main/Services/FileService";
+import { ITask } from "@render/db";
+import * as path from "path";
 @Controller()
 export class MyController {
   constructor(private myService: MyService, private fileService: FileService) {}
@@ -40,6 +43,16 @@ export class MyController {
   public replyOpenDistFolder(data: Partial<OpenedFolder>) {
     const openedFoler = new OpenedFolderData(data);
     return openedFoler;
+  }
+
+  @IpcOn(EVENTS.REPLY_DOWNLOAD_INFO)
+  public replyDownloadInfo(data: YtResponse) {
+    return data;
+  }
+
+  @IpcOn(EVENTS.REPLY_DOWNLOAD_FILE)
+  public replyDownloadFile(data: ITask) {
+    return data;
   }
 
   @IpcInvoke(EVENTS.SAVE_FILE)
@@ -109,5 +122,54 @@ export class MyController {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  @IpcInvoke(EVENTS.DOWNLOAD_INFO)
+  public async handleDownloadInfo(url: string) {
+    youtubedl(url, {
+      dumpSingleJson: true,
+    })
+      .then((output) => this.replyDownloadInfo(output))
+      .catch((err) => console.log(err));
+  }
+
+  @IpcInvoke(EVENTS.DOWNLOAD_FILE)
+  public async handleDownloadFile(row: ITask) {
+    console.log(row);
+    const subprocess = exec(row.webpage_url, {
+      output: path.join(row.config.dist, `${row.title}.mp4`),
+    });
+    console.log(`Running subprocess as ${subprocess.pid}`);
+    subprocess.stdout.setEncoding("utf-8");
+    subprocess.stdout.on("data", (data) => {
+      const liveData = data.toString();
+      if (!liveData.includes("[download]")) return;
+
+      let liveDataArray = liveData.split(" ").filter((el) => {
+        return el !== "";
+      });
+      if (liveDataArray.length > 10) return;
+      liveDataArray = liveDataArray.filter((el) => {
+        return el !== "\n";
+      });
+      let percentage: string = liveDataArray[1];
+      let speed: string = liveDataArray[5];
+      let eta: string = liveDataArray[7];
+      if (percentage === "100%") {
+      } else {
+        console.log(percentage, speed, eta);
+        this.replyDownloadFile({
+          ...row,
+          progress: +percentage.split("%")[0],
+        });
+      }
+    });
+
+    subprocess.stdout.on("close", () => {
+      if (subprocess.killed) {
+        console.log("killed");
+      }
+      console.log("done");
+    });
   }
 }

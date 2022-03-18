@@ -6,8 +6,9 @@ import { ConfigForm } from "../Config/Config.data";
 export class TaskForm extends CommonDTO implements ITask {
   id?: number;
   updatedAt: number;
-  name: string = "";
+  title: string = "";
   progress: number = 0;
-  urls: string[] = [];
-  configs: IConfig = new ConfigForm();
+  webpage_url: string = "";
+  thumbnail: string = "";
+  config: IConfig = new ConfigForm();
 }

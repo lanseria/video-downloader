@@ -25,7 +25,8 @@
     "rxjs": "^7.5.5",
     "store": "^2.0.12",
     "vue": "^3.2.31",
-    "vue-router": "^4.0.14"
+    "vue-router": "^4.0.14",
+    "youtube-dl-exec": "^2.0.8"
   },
   "devDependencies": {
     "@anatine/esbuild-decorators": "^0.2.18",
