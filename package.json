@@ -1,6 +1,6 @@
 {
   "name": "video-downloader",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Vite + Electron with esbuild, so fast! ⚡",
   "main": "dist/main/index.js",
   "scripts": {
