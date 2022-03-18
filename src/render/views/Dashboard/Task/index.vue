@@ -58,8 +58,8 @@ import { Observable } from "rxjs";
 import TaskModal from "./TaskModal.vue";
 import { EVENTS } from "@common/events";
 import { ipcInstance, useIpc } from "@render/plugins";
-import { IpcOn } from "@main/decorators";
 import TaskItem from "./TaskItem.vue";
+import TaskProgress from "./TaskProgress.vue";
 // useIpc
 const ipc = useIpc();
 const columns = [
@@ -79,6 +79,11 @@ const columns = [
   {
     title: "进度(%)",
     key: "progress",
+    render: (row: ITask, rowIndex: number) => {
+      return h(TaskProgress, {
+        modelRef: row,
+      });
+    },
   },
   {
     title: "Action",

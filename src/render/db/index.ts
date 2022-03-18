@@ -6,11 +6,11 @@ export class DashboardDatabase extends Dexie {
 
   constructor() {
     super("DashboardDatabase");
-    this.version(4).stores({
+    this.version(5).stores({
       configs:
         "++id, updatedAt, ignoreError, abortOnError, dumpUserAgent, ignoreConfig, proxy, socketTimeout, dist",
       tasks:
-        "++id, updatedAt, title, progress, webpage_url, thumbnail, duration, filesize, extractor, config",
+        "++id, updatedAt, title, progress, webpage_url, thumbnail, duration, filesize, extractor, speed, eta, config",
     });
   }
 }
@@ -38,6 +38,8 @@ export interface ITask extends ICommon {
   duration: number;
   filesize: number;
   extractor: string;
+  speed: string;
+  eta: string;
   config: IConfig;
 }
 

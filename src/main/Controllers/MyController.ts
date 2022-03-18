@@ -10,7 +10,7 @@ import {
 } from "@common/dto";
 import { readFile, writeJson } from "@main/utils/fs";
 import { FileService } from "@main/Services/FileService";
-import { ITask } from "@render/db";
+import { IConfig, ITask } from "@render/db";
 import * as path from "path";
 import * as fs from "fs";
 import axios from "axios";
@@ -204,9 +204,11 @@ export class MyController {
   }
 
   @IpcInvoke(EVENTS.DOWNLOAD_INFO)
-  public async handleDownloadInfo(url: string) {
-    youtubedl(url, {
+  public async handleDownloadInfo(config: IObj) {
+    console.log(config);
+    youtubedl(config.url, {
       dumpSingleJson: true,
+      proxy: config.proxy,
     })
       .then((output) => {
         this.replyDownloadInfo(output);
@@ -227,6 +229,7 @@ export class MyController {
     subprocess.stdout.setEncoding("utf-8");
     subprocess.stdout.on("data", (data) => {
       const liveData = data.toString();
+      console.log(liveData);
       if (!liveData.includes("[download]")) return;
 
       let liveDataArray = liveData.split(" ").filter((el) => {
@@ -241,10 +244,12 @@ export class MyController {
       let eta: string = liveDataArray[7];
       if (percentage === "100%") {
       } else {
-        console.log(percentage, speed, eta);
+        // console.log(percentage, speed, eta);
         this.replyDownloadFile({
           ...row,
           progress: +percentage.split("%")[0],
+          speed,
+          eta,
         });
       }
     });

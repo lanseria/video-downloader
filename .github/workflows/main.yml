@@ -41,7 +41,7 @@ jobs:
           node-version: "16"
           cache: "pnpm"
       - run: pnpm install
-      - run: pnpm build
+      - run: pnpm build:github
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

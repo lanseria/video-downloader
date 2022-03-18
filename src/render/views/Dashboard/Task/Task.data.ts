@@ -13,5 +13,7 @@ export class TaskForm extends CommonDTO implements ITask {
   duration: number = 0;
   filesize: number = 0;
   extractor: string = "";
+  speed: string = "";
+  eta: string = "";
   config: IConfig = new ConfigForm();
 }

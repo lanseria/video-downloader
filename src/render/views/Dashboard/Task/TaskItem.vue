@@ -21,7 +21,7 @@ import { NSpace } from "naive-ui";
 import { computed, PropType } from "vue";
 import { TaskForm } from "./Task.data";
 import dayjs from "dayjs";
-import * as Duration from "dayjs/plugin/duration";
+import Duration from "dayjs/plugin/duration";
 dayjs.extend(Duration);
 const props = defineProps({
   modelRef: {

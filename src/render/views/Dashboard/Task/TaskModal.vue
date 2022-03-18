@@ -98,7 +98,10 @@ onMounted(() => {
 // methods
 const handleChange = (url: string) => {
   validLoading.value = true;
-  ipcInstance.send(EVENTS.DOWNLOAD_INFO, url);
+  ipcInstance.send(EVENTS.DOWNLOAD_INFO, {
+    ...modelRef.value.config,
+    url,
+  });
 };
 const open = async (row?: TaskForm) => {
   try {
