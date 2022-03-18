@@ -221,6 +221,7 @@ export class MyController {
   public async handleDownloadFile(row: ITask) {
     const subprocess = youtubedl.exec(row.webpage_url, {
       output: path.join(row.config.dist, `${row.title}.mp4`),
+      proxy: row.config.proxy,
     });
     console.log(`Running subprocess as ${subprocess.pid}`);
     subprocess.stdout.setEncoding("utf-8");

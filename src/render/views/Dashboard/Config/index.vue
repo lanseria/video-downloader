@@ -39,7 +39,7 @@
       :bordered="false"
     ></n-data-table>
   </imp-page-container>
-  <config-modal ref="ConfigModalRef"></config-modal>
+  <config-modal ref="ConfigModalRef" @load-page="onLoadPage"></config-modal>
 </template>
 <script lang="ts" setup>
 import {
@@ -167,6 +167,10 @@ onMounted(() => {
   });
 });
 // methods
+const onLoadPage = (data) => {
+  const form = serialize(data);
+  db.configs.add(form);
+};
 const handleAdd = () => {
   ConfigModalRef.value.open();
 };

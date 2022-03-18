@@ -37,7 +37,6 @@ import {
   NInputGroup,
 } from "naive-ui";
 import { ConfigForm } from "./Config.data";
-import { db } from "@render/db";
 import { serialize } from "@common/utils";
 import dayjs from "dayjs";
 import { useFileStore } from "@render/store/modules/file";
@@ -76,14 +75,12 @@ const open = (row?: ConfigForm) => {
 };
 const handleSubmit = () => {
   modelRef.value.updatedAt = +dayjs();
-  const form = serialize(modelRef.value);
-  db.configs.add(form);
   ImpModalRef.value.showModal = false;
+  emit("load-page", modelRef.value);
 };
 const close = () => {
   modelRef.value = new ConfigForm();
   ImpModalRef.value.showModal = false;
-  emit("load-page");
 };
 defineExpose({
   open,

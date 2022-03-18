@@ -29,10 +29,14 @@
           :disabled="validLoading"
           >添加</n-button
         >
+        <n-button @click="handleConfig()" :disabled="validLoading"
+          >修改配置</n-button
+        >
         <n-button @click="close()" :disabled="validLoading">返回</n-button>
       </n-space>
     </template>
   </imp-modal>
+  <config-modal ref="ConfigModalRef" @load-page="onLoadPage"></config-modal>
 </template>
 <script lang="ts" setup>
 import ImpModal from "@render/components/global/ImpModal.vue";
@@ -55,6 +59,7 @@ import { ipcInstance } from "@render/plugins";
 import { YtResponse } from "youtube-dl-exec";
 import { IpcResponseDTO } from "@common/dto";
 import TaskItem from "./TaskItem.vue";
+import ConfigModal from "../Config/ConfigModal.vue";
 
 const emit = defineEmits(["load-page"]);
 
@@ -62,6 +67,8 @@ const emit = defineEmits(["load-page"]);
 const ipc = useIpc();
 // refs
 const ImpModalRef = ref();
+// refs
+const ConfigModalRef = ref();
 // ref
 const validUrl = ref("");
 const validLoading = ref(false);
@@ -106,6 +113,12 @@ const open = async (row?: TaskForm) => {
     ImpModalRef.value.showModal = false;
     window.$message.warning(error.toString());
   }
+};
+const handleConfig = () => {
+  ConfigModalRef.value.open(modelRef.value.config);
+};
+const onLoadPage = (data) => {
+  modelRef.value.config = data;
 };
 const handleSubmit = () => {
   modelRef.value.updatedAt = +dayjs();
