@@ -1,3 +1,4 @@
+import { IpcResponse } from "./types";
 import { mergeProperties } from "./utils";
 
 export class CommonDTO {
@@ -5,6 +6,16 @@ export class CommonDTO {
     if (obj) {
       Object.assign(this, mergeProperties(this, obj));
     }
+  }
+}
+
+export class IpcResponseDTO<T> extends CommonDTO {
+  data: T;
+  error: string = null;
+  constructor(data: T | null, error: string | null) {
+    super();
+    this.data = data;
+    this.error = error;
   }
 }
 

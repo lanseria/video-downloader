@@ -145,11 +145,9 @@ onMounted(() => {
 });
 // methods
 const handleDownload = (row: ITask) => {
-  console.log(row);
   ipcInstance.send(EVENTS.DOWNLOAD_FILE, row);
 };
 const handleDelete = (row: ITask) => {
-  console.log(row);
   db.tasks.delete(row.id);
 };
 const handleAdd = () => {

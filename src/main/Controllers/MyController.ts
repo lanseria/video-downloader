@@ -1,15 +1,35 @@
 import { Controller, IpcInvoke, IpcOn } from "../decorators";
 import { MyService } from "../Services/MyService";
 import { EVENTS } from "@common/events";
-import youtubedl, { YtResponse, exec } from "youtube-dl-exec";
-import { ImportJson, OpenedFolderData, UploadMedia } from "@common/dto";
+import { YtResponse, create as createYoutubeDl } from "youtube-dl-exec";
+import {
+  ImportJson,
+  IpcResponseDTO,
+  OpenedFolderData,
+  UploadMedia,
+} from "@common/dto";
 import { readFile, writeJson } from "@main/utils/fs";
 import { FileService } from "@main/Services/FileService";
 import { ITask } from "@render/db";
 import * as path from "path";
+import * as fs from "fs";
+import axios from "axios";
+import { convertBytes } from "@main/utils";
+// YOUTUBEDL
+const youtubedl = createYoutubeDl(path.join("./", "youtube-dl"));
 @Controller()
 export class MyController {
   constructor(private myService: MyService, private fileService: FileService) {}
+
+  @IpcOn(EVENTS.REPLY_EXEC_PRELOAD)
+  public replyExecPreload(data: boolean = null, err = null) {
+    return new IpcResponseDTO<boolean>(data, err);
+  }
+
+  @IpcOn(EVENTS.REPLY_EXEC_DOWNLOAD)
+  public replyExecDownload(data: string = null, err = null) {
+    return new IpcResponseDTO<string>(data, err);
+  }
 
   @IpcOn(EVENTS.REPLY_SAVE_FILE)
   /**
@@ -46,13 +66,72 @@ export class MyController {
   }
 
   @IpcOn(EVENTS.REPLY_DOWNLOAD_INFO)
-  public replyDownloadInfo(data: YtResponse) {
-    return data;
+  public replyDownloadInfo(data: YtResponse = null, err = null) {
+    return new IpcResponseDTO<YtResponse>(data, err);
   }
 
   @IpcOn(EVENTS.REPLY_DOWNLOAD_FILE)
   public replyDownloadFile(data: ITask) {
     return data;
+  }
+
+  @IpcInvoke(EVENTS.EXEC_PRELOAD)
+  public async handleExecPreload() {
+    try {
+      await youtubedl("https://www.bilibili.com/video/BV1ea411h7X5/", {
+        dumpJson: true,
+      });
+      this.replyExecPreload(true);
+    } catch (err) {
+      this.replyExecPreload(null, err.toString());
+    }
+  }
+
+  @IpcInvoke(EVENTS.EXEC_DOWNLOAD)
+  public async handleExecDownload() {
+    const URL_PREFIX = "https://mirror.ghproxy.com/";
+    const URL_GITHUB =
+      "https://github.com/ytdl-org/youtube-dl/releases/download/2021.12.17/";
+    const unix = "youtube-dl";
+    const win = "youtube-dl.exe";
+    const downloadToDist = async (filename: string) => {
+      const writer = fs.createWriteStream(path.join("./", filename));
+      const { data, headers } = await axios.get(
+        URL_PREFIX + URL_GITHUB + filename,
+        {
+          responseType: "stream",
+        }
+      );
+      const totalLength = +headers["content-length"];
+      const total = convertBytes(totalLength);
+      let received = 0;
+      return await new Promise((resolve, reject) => {
+        let error = null;
+        data.on("data", (chunk) => {
+          received += chunk.length;
+          const percentage = ((received / totalLength) * 100).toFixed(0) + "%";
+          this.replyExecDownload(`${filename}: ${percentage} of ${total}`);
+        });
+        writer.on("error", (err) => {
+          error = err;
+          reject(err);
+        });
+        writer.on("close", async () => {
+          if (!error) {
+            resolve(true);
+          }
+        });
+        data.pipe(writer);
+      });
+    };
+    try {
+      await downloadToDist(unix);
+      await downloadToDist(win);
+      await this.handleExecPreload();
+    } catch (error) {
+      console.log(error);
+      this.replyExecDownload(null, error);
+    }
   }
 
   @IpcInvoke(EVENTS.SAVE_FILE)
@@ -129,14 +208,18 @@ export class MyController {
     youtubedl(url, {
       dumpSingleJson: true,
     })
-      .then((output) => this.replyDownloadInfo(output))
-      .catch((err) => console.log(err));
+      .then((output) => {
+        this.replyDownloadInfo(output);
+      })
+      .catch((err) => {
+        console.log(err);
+        this.replyDownloadInfo(null, err.toString());
+      });
   }
 
   @IpcInvoke(EVENTS.DOWNLOAD_FILE)
   public async handleDownloadFile(row: ITask) {
-    console.log(row);
-    const subprocess = exec(row.webpage_url, {
+    const subprocess = youtubedl.exec(row.webpage_url, {
       output: path.join(row.config.dist, `${row.title}.mp4`),
     });
     console.log(`Running subprocess as ${subprocess.pid}`);
