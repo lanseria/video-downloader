@@ -59,6 +59,7 @@ import TaskModal from "./TaskModal.vue";
 import { EVENTS } from "@common/events";
 import { ipcInstance, useIpc } from "@render/plugins";
 import { IpcOn } from "@main/decorators";
+import TaskItem from "./TaskItem.vue";
 // useIpc
 const ipc = useIpc();
 const columns = [
@@ -70,24 +71,9 @@ const columns = [
     title: "标题",
     key: "title",
     render: (row: ITask, rowIndex: number) => {
-      return h(
-        NSpace,
-        {
-          vertical: true,
-        },
-        {
-          default: () => {
-            return [
-              row.title,
-              h("img", {
-                referrerpolicy: "no-referrer",
-                width: "200",
-                src: row.thumbnail,
-              }),
-            ];
-          },
-        }
-      );
+      return h(TaskItem, {
+        modelRef: row,
+      });
     },
   },
   {

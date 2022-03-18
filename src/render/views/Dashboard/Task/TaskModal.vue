@@ -20,12 +20,7 @@
         </n-input-group>
       </n-form-item>
     </n-form>
-    <n-space justify="space-between">
-      <img width="200" :src="modelRef.thumbnail" referrerpolicy="no-referrer" />
-      <n-space>
-        <div>{{ modelRef.title }}</div>
-      </n-space>
-    </n-space>
+    <task-item :model-ref="modelRef"></task-item>
     <template #footer>
       <n-space>
         <n-button
@@ -59,6 +54,7 @@ import { EVENTS } from "@common/events";
 import { ipcInstance } from "@render/plugins";
 import { YtResponse } from "youtube-dl-exec";
 import { IpcResponseDTO } from "@common/dto";
+import TaskItem from "./TaskItem.vue";
 
 const emit = defineEmits(["load-page"]);
 
@@ -85,10 +81,8 @@ onMounted(() => {
     validLoading.value = false;
     if (res.data) {
       const { data } = res;
-      console.log(data);
-      modelRef.value.title = data.title;
-      modelRef.value.webpage_url = data.webpage_url;
-      modelRef.value.thumbnail = data.thumbnail;
+      modelRef.value.mergeProperties(data);
+      console.log(modelRef.value);
     } else {
       window.$message.warning(res.error);
     }

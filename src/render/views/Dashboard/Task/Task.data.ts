@@ -9,6 +9,9 @@ export class TaskForm extends CommonDTO implements ITask {
   title: string = "";
   progress: number = 0;
   webpage_url: string = "";
-  thumbnail: string = "";
+  thumbnail: string = "https://dummyimage.com/200x120/333333/FFF&text=No-Image";
+  duration: number = 0;
+  filesize: number = 0;
+  extractor: string = "";
   config: IConfig = new ConfigForm();
 }
