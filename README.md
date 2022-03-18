@@ -1,6 +1,16 @@
 # Video Downloader
 
-This template is used to build vite + electron projects.
+使用 vitejs + vue + electron 17 打造的视频下载工具
+
+## Feature
+
+- [x] 视频下载
+- [x] 可执行文件检查与下载
+  - [ ] unix 系统可执行文件权限限制
+- [x] 代理下载
+  - [ ] 图片封面代理
+- [x] 进度条
+- [ ] 多线程下载
 
 **NOTE:** Main process is built with esbuild. After some modifications, it currently supports [`emitDecoratorMetadata`](https://www.typescriptlang.org/tsconfig#emitDecoratorMetadata).
 

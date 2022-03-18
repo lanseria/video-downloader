@@ -46,7 +46,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: ls desktop app
-        run: ls dist/electron/
+        run: ls -al dist/electron/
 
       # step5: cleanup artifacts in dist/electron
       - name: cleanup artifacts for windows
