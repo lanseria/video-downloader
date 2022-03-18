@@ -30,7 +30,7 @@ jobs:
       # step1: check out repository
       - name: Check out git repository
         uses: actions/checkout@v3
-        uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v2
         with:
           version: 6.32.2
 
