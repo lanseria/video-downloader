@@ -11,29 +11,32 @@ import { loadEnv } from "vite";
 export default ({ command, mode }: ConfigEnv): UserConfig => {
   const root = process.cwd();
   const env = loadEnv(mode, root);
-  console.log(env.VITE_ELECTRON_BUILDER_CONFIG);
+  console.log(mode, command);
+  const userOptions = {
+    root: root,
+    tsconfig: "./tsconfig.main.json",
+    electronBuilderConfig: undefined,
+    afterEsbuildBuild: async () => {
+      await compileFile({
+        filename: "./dist/main/index.js",
+        output: "./dist/main/main.jsc",
+        electron: true,
+      });
+
+      writeFileSync(
+        "./dist/main/index.js",
+        "require('bytenode');require('./main.jsc')"
+      );
+    },
+  };
+  const plugins = [vue()];
+  if (command === "build") {
+    userOptions.electronBuilderConfig = env.VITE_ELECTRON_BUILDER_CONFIG;
+  }
+  plugins.push(VitePluginElectronBuilder(userOptions));
   return {
     root: join(__dirname, "src/render"),
-    plugins: [
-      vue(),
-      VitePluginElectronBuilder({
-        root: root,
-        tsconfig: "./tsconfig.main.json",
-        electronBuilderConfig: process.env.VITE_ELECTRON_BUILDER_CONFIG,
-        afterEsbuildBuild: async () => {
-          await compileFile({
-            filename: "./dist/main/index.js",
-            output: "./dist/main/main.jsc",
-            electron: true,
-          });
-
-          writeFileSync(
-            "./dist/main/index.js",
-            "require('bytenode');require('./main.jsc')"
-          );
-        },
-      }),
-    ],
+    plugins,
     resolve: {
       alias: {
         "@render": join(__dirname, "src/render"),
