@@ -30,6 +30,9 @@ jobs:
       # step1: check out repository
       - name: Check out git repository
         uses: actions/checkout@v3
+        uses: pnpm/action-setup@v2
+        with:
+          version: 6.32.2
 
       # step2: install node env
       - name: Install Node.js
@@ -37,8 +40,8 @@ jobs:
         with:
           node-version: "16"
           cache: "pnpm"
-        run: pnpm install
-        run: pnpm build
+      - run: pnpm install
+      - run: pnpm build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
