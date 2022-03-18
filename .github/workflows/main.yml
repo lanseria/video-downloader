@@ -29,11 +29,11 @@ jobs:
     steps:
       # step1: check out repository
       - name: Check out git repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # step2: install node env
       - name: Install Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "16"
           cache: "pnpm"
@@ -41,7 +41,7 @@ jobs:
       # step3: yarn install
       - name: pnpm install
         run: |
-          pnpm install --frozen-lockfile
+          pnpm install
 
       # step4: build app for mac/win/ubuntu
       - name: build desktop app
@@ -72,7 +72,7 @@ jobs:
 
       # step6: upload artifacts
       - name: upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.os }}
           path: dist/electron
