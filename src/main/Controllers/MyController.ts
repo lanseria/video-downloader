@@ -208,7 +208,7 @@ export class MyController {
     console.log(config);
     youtubedl(config.url, {
       dumpSingleJson: true,
-      proxy: config.proxy,
+      proxy: config.proxy || undefined,
     })
       .then((output) => {
         this.replyDownloadInfo(output);
@@ -223,7 +223,7 @@ export class MyController {
   public async handleDownloadFile(row: ITask) {
     const subprocess = youtubedl.exec(row.webpage_url, {
       output: path.join(row.config.dist, `${row.title}.mp4`),
-      proxy: row.config.proxy,
+      proxy: row.config.proxy || undefined,
     });
     console.log(`Running subprocess as ${subprocess.pid}`);
     subprocess.stdout.setEncoding("utf-8");

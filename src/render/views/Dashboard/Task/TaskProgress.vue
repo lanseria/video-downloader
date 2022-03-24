@@ -8,7 +8,7 @@
       :height="30"
       :border-radius="4"
       :fill-border-radius="0"
-      processing
+      :processing="processing"
     />
     <div class="other">
       <span class="speed">{{ modelRef.speed }}</span>
@@ -18,13 +18,16 @@
 </template>
 <script lang="ts" setup>
 import { NProgress, NEl } from "naive-ui";
-import { PropType } from "vue";
+import { computed, PropType } from "vue";
 import { TaskForm } from "./Task.data";
-defineProps({
+const props = defineProps({
   modelRef: {
     type: Object as PropType<TaskForm>,
     required: true,
   },
+});
+const processing = computed(() => {
+  return ![0, 100].includes(props.modelRef.progress);
 });
 </script>
 <style lang="css" scoped>

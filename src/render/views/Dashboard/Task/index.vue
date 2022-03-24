@@ -95,6 +95,7 @@ const columns = [
             h(
               NButton,
               {
+                disabled: ![0, 100].includes(row.progress),
                 type: "primary",
                 tertiary: true,
                 size: "small",
