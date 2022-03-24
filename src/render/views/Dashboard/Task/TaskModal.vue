@@ -108,6 +108,7 @@ const open = async (row?: TaskForm) => {
     if (row) {
       modelRef.value.mergeProperties(row);
     } else {
+      validUrl.value = "";
       modelRef.value = new TaskForm();
       modelRef.value.config = await getConfig();
     }

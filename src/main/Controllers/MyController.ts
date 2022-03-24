@@ -15,6 +15,7 @@ import * as path from "path";
 import * as fs from "fs";
 import axios from "axios";
 import { convertBytes } from "@main/utils";
+import { shell } from "electron";
 // YOUTUBEDL
 const youtubedl = createYoutubeDl(path.join("./", "youtube-dl"));
 @Controller()
@@ -73,6 +74,11 @@ export class MyController {
   @IpcOn(EVENTS.REPLY_DOWNLOAD_FILE)
   public replyDownloadFile(data: ITask) {
     return data;
+  }
+
+  @IpcOn(EVENTS.REPLY_OPEN_FILE_IN_DIR)
+  public replyOpenFileInDir(data: boolean = null, err = null) {
+    return new IpcResponseDTO<boolean>(data, err);
   }
 
   @IpcInvoke(EVENTS.EXEC_PRELOAD)
@@ -205,12 +211,18 @@ export class MyController {
 
   @IpcInvoke(EVENTS.DOWNLOAD_INFO)
   public async handleDownloadInfo(config: IObj) {
-    console.log(config);
+    const proxy = config.proxy || undefined;
     youtubedl(config.url, {
       dumpSingleJson: true,
-      proxy: config.proxy || undefined,
+      proxy,
     })
-      .then((output) => {
+      .then(async (output) => {
+        const base = await this.myService.getImage2Base64(
+          output.thumbnail,
+          config,
+          output
+        );
+        output.thumbnail = base;
         this.replyDownloadInfo(output);
       })
       .catch((err) => {
@@ -229,7 +241,6 @@ export class MyController {
     subprocess.stdout.setEncoding("utf-8");
     subprocess.stdout.on("data", (data) => {
       const liveData = data.toString();
-      console.log(liveData);
       if (!liveData.includes("[download]")) return;
 
       let liveDataArray = liveData.split(" ").filter((el) => {
@@ -260,5 +271,14 @@ export class MyController {
       }
       console.log("done");
     });
+  }
+
+  @IpcInvoke(EVENTS.OPEN_FILE_IN_DIR)
+  public handleOpenFileInDir(row: ITask) {
+    if (!fs.existsSync(row.config.dist)) {
+      this.replyOpenFileInDir(false, "无效文件");
+      return;
+    }
+    shell.openExternal(row.config.dist);
   }
 }

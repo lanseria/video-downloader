@@ -60,6 +60,7 @@ import { EVENTS } from "@common/events";
 import { ipcInstance, useIpc } from "@render/plugins";
 import TaskItem from "./TaskItem.vue";
 import TaskProgress from "./TaskProgress.vue";
+import { IpcResponseDTO } from "@common/dto";
 // useIpc
 const ipc = useIpc();
 const columns = [
@@ -99,14 +100,13 @@ const columns = [
                 type: "primary",
                 tertiary: true,
                 size: "small",
-                onClick: () => handleDownload(row),
+                onClick: () => handleDownloadOrOpen(row),
               },
-              { default: () => "下载" }
+              { default: () => (row.progress === 100 ? "打开" : "下载") }
             ),
             h(
               NButton,
               {
-                disabled: ![0, 100].includes(row.progress),
                 tertiary: true,
                 size: "small",
                 onClick: () => handleDelete(row),
@@ -134,10 +134,19 @@ onMounted(() => {
   ipc.on(EVENTS.REPLY_DOWNLOAD_FILE, (data: ITask) => {
     db.tasks.put(data);
   });
+  ipc.on(EVENTS.REPLY_OPEN_FILE_IN_DIR, (res: IpcResponseDTO<boolean>) => {
+    if (res.error) {
+      window.$message.warning(res.error);
+    }
+  });
 });
 // methods
-const handleDownload = (row: ITask) => {
-  ipcInstance.send(EVENTS.DOWNLOAD_FILE, row);
+const handleDownloadOrOpen = (row: ITask) => {
+  if (row.progress === 100) {
+    ipcInstance.send(EVENTS.OPEN_FILE_IN_DIR, row);
+  } else {
+    ipcInstance.send(EVENTS.DOWNLOAD_FILE, row);
+  }
 };
 const handleDelete = (row: ITask) => {
   db.tasks.delete(row.id);
