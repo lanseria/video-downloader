@@ -22,16 +22,13 @@ https://www.bilibili.com/video/BV1vq4y1v7by/
 
 ## How to use
 
-- Click the [Use this template](https://github.com/ArcherGu/fast-vite-electron/generate) button (you must be logged in) or just clone this repo.
-- In the project folder:
+```bash
+# install dependencies
+pnpm i --frozen-lockfile
 
-  ```bash
-  # install dependencies
-  pnpm i --frozen-lockfile
+# run in developer mode
+pnpm dev # npm run dev
 
-  # run in developer mode
-  yarn dev # npm run dev
-
-  # build
-  yarn build # npm run build
-  ```
+# build
+pnpm build # npm run build
+```
