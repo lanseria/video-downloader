@@ -2,19 +2,14 @@ import { Controller, IpcInvoke, IpcOn } from "../decorators";
 import { MyService } from "../Services/MyService";
 import { EVENTS } from "@common/events";
 import { YtResponse, create as createYoutubeDl } from "youtube-dl-exec";
-import {
-  ImportJson,
-  IpcResponseDTO,
-  OpenedFolderData,
-  UploadMedia,
-} from "@common/dto";
+import { ImportJson, IpcResponseDTO, OpenedFolderData } from "@common/dto";
 import { readFile, writeJson } from "@main/utils/fs";
 import { FileService } from "@main/Services/FileService";
-import { IConfig, ITask } from "@render/db";
+import { ITask } from "@render/db";
 import * as path from "path";
 import * as fs from "fs";
 import axios from "axios";
-import { convertBytes } from "@main/utils";
+import { convertBytes, getDownloadInfo } from "@main/utils";
 import { shell } from "electron";
 // YOUTUBEDL
 const youtubedl = createYoutubeDl(path.join("./", "youtube-dl"));
@@ -211,24 +206,12 @@ export class MyController {
 
   @IpcInvoke(EVENTS.DOWNLOAD_INFO)
   public async handleDownloadInfo(config: IObj) {
-    const proxy = config.proxy || undefined;
-    youtubedl(config.url, {
-      dumpSingleJson: true,
-      proxy,
-    })
-      .then(async (output) => {
-        const base = await this.myService.getImage2Base64(
-          output.thumbnail,
-          config,
-          output
-        );
-        output.thumbnail = base;
-        this.replyDownloadInfo(output);
-      })
-      .catch((err) => {
-        console.log(err);
-        this.replyDownloadInfo(null, err.toString());
-      });
+    try {
+      const output = await getDownloadInfo(config);
+      this.replyDownloadInfo(output);
+    } catch (err) {
+      this.replyDownloadInfo(null, err.toString());
+    }
   }
 
   @IpcInvoke(EVENTS.DOWNLOAD_FILE)
@@ -241,6 +224,7 @@ export class MyController {
     subprocess.stdout.setEncoding("utf-8");
     subprocess.stdout.on("data", (data) => {
       const liveData = data.toString();
+      console.log(liveData);
       if (!liveData.includes("[download]")) return;
 
       let liveDataArray = liveData.split(" ").filter((el) => {
@@ -281,4 +265,7 @@ export class MyController {
     }
     shell.openExternal(row.config.dist);
   }
+
+  @IpcInvoke(EVENTS.EXEC_PAUSE)
+  public handlePauseDownload(row: ITask) {}
 }

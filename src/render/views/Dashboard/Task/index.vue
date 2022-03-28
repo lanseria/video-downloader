@@ -133,6 +133,10 @@ onMounted(() => {
       window.$message.warning(res.error);
     }
   });
+  ipc.on(EVENTS.REPLY_EXEC_PAUSE, (data: ITask) => {
+    data.pending = true;
+    db.tasks.put(data);
+  });
 });
 // methods
 const handleDelete = (row: ITask) => {

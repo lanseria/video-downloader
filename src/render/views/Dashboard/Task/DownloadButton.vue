@@ -34,10 +34,7 @@ const hoverMap = {
     1: "下载=>",
     disabled: false,
     click: () => {
-      const row = { ...props.row };
-      console.log(row);
-      row.pending = true;
-      ipcInstance.send(EVENTS.DOWNLOAD_FILE, serialize(row));
+      handleDownload();
     },
   },
   2: {
@@ -53,6 +50,7 @@ const hoverMap = {
     1: "暂停下载",
     disabled: false,
     click: () => {
+      handlePause();
       return;
     },
   },
@@ -61,9 +59,7 @@ const hoverMap = {
     1: "继续下载",
     disabled: false,
     click: () => {
-      const row = { ...props.row };
-      row.pending = true;
-      ipcInstance.send(EVENTS.DOWNLOAD_FILE, row);
+      handleDownload();
     },
   },
   5: {
@@ -71,12 +67,12 @@ const hoverMap = {
     1: "打开目录",
     disabled: false,
     click: () => {
-      const row = { ...props.row };
-      ipcInstance.send(EVENTS.OPEN_FILE_IN_DIR, row);
+      handleOpendir();
     },
   },
 };
 const isHovered = ref(false);
+// 处理判断逻辑
 const hoverNum = computed(() => {
   if (props.row.progress === 0) {
     if (props.row.pending === false) {
@@ -101,4 +97,18 @@ const btnText = computed(() => {
 function onHover(state: boolean) {
   isHovered.value = state;
 }
+
+const handleDownload = () => {
+  const row = { ...props.row };
+  row.pending = true;
+  ipcInstance.send(EVENTS.DOWNLOAD_FILE, serialize(row));
+};
+const handleOpendir = () => {
+  const row = { ...props.row };
+  ipcInstance.send(EVENTS.OPEN_FILE_IN_DIR, serialize(row));
+};
+const handlePause = () => {
+  const row = { ...props.row };
+  ipcInstance.send(EVENTS.EXEC_PAUSE, serialize(row));
+};
 </script>

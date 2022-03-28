@@ -55,6 +55,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         "@vicons/ionicons5",
         "nanoid",
         "indexeddb-export-import",
+        "@vueuse/components",
       ],
     },
   };
