@@ -5,6 +5,7 @@ specifiers:
   '@vicons/ionicons5': ^0.12.0
   '@vitejs/plugin-vue': ^2.2.4
   '@vue/compiler-sfc': ^3.2.31
+  '@vueuse/components': ^8.2.0
   '@vueuse/core': ^8.2.0
   '@vueuse/rxjs': ^8.2.0
   axios: ^0.26.1
@@ -34,6 +35,7 @@ specifiers:
 
 dependencies:
   '@vicons/ionicons5': 0.12.0
+  '@vueuse/components': 8.2.0_vue@3.2.31
   '@vueuse/core': 8.2.0_vue@3.2.31
   '@vueuse/rxjs': 8.2.0_rxjs@7.5.5+vue@3.2.31
   axios: 0.26.1
@@ -412,6 +414,17 @@ packages:
 
   /@vue/shared/3.2.31:
     resolution: {integrity: sha512-ymN2pj6zEjiKJZbrf98UM2pfDd6F2H7ksKw7NDt/ZZ1fh5Ei39X5tABugtT03ZRlWd9imccoK0hE8hpjpU7irQ==}
+
+  /@vueuse/components/8.2.0_vue@3.2.31:
+    resolution: {integrity: sha512-zchb7HV3wQFjxkggrye5zTNNMQgtarQlTQmVBcWFNWyLyCI6mVK9DRhX36azkLvEGYk2aFGH6fIJGrE+2Dsi8g==}
+    dependencies:
+      '@vueuse/core': 8.2.0_vue@3.2.31
+      '@vueuse/shared': 8.2.0_vue@3.2.31
+      vue-demi: 0.12.4_vue@3.2.31
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+    dev: false
 
   /@vueuse/core/8.2.0_vue@3.2.31:
     resolution: {integrity: sha512-89ZfKtFHz5ynfpWyFVXtK0yePJ2MZqFaOxnGeZn7cIp8KFbPRlu6Wsxi3gBkJNpjq+q9qbEh6MjV7QBvqCQ5Og==}

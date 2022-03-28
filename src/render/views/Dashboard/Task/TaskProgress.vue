@@ -10,9 +10,9 @@
       :fill-border-radius="0"
       :processing="processing"
     />
-    <div class="other">
+    <div v-if="![0, 100].includes(modelRef.progress)" class="other">
       <span class="speed">{{ modelRef.speed }}</span>
-      <span class="eta">{{ modelRef.eta }}</span>
+      <span class="eta">ETA {{ modelRef.eta }}</span>
     </div>
   </n-el>
 </template>
@@ -40,6 +40,9 @@ const processing = computed(() => {
   position: absolute;
 }
 .other {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
   position: absolute;
   top: 30px;
 }

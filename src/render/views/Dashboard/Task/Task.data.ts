@@ -15,5 +15,6 @@ export class TaskForm extends CommonDTO implements ITask {
   extractor: string = "";
   speed: string = "";
   eta: string = "";
+  pending = false;
   config: IConfig = new ConfigForm();
 }

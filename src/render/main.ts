@@ -1,6 +1,6 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-
+import { db } from "@render/db";
 import { setupRouter } from "./router";
 import { setupStore } from "./store/";
 
@@ -13,6 +13,10 @@ async function bootstrap() {
 
   // Configure routing
   setupRouter(app);
+
+  db.tasks.each((task) => {
+    task.pending = true;
+  });
 
   app.mount("#app", true);
 }

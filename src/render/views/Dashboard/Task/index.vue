@@ -58,6 +58,7 @@ import { Observable } from "rxjs";
 import TaskModal from "./TaskModal.vue";
 import { EVENTS } from "@common/events";
 import { ipcInstance, useIpc } from "@render/plugins";
+import DownloadButton from "./DownloadButton.vue";
 import TaskItem from "./TaskItem.vue";
 import TaskProgress from "./TaskProgress.vue";
 import { IpcResponseDTO } from "@common/dto";
@@ -93,17 +94,9 @@ const columns = [
       return h(NSpace, null, {
         default: () => {
           const spaceList = [
-            h(
-              NButton,
-              {
-                disabled: ![0, 100].includes(row.progress),
-                type: "primary",
-                tertiary: true,
-                size: "small",
-                onClick: () => handleDownloadOrOpen(row),
-              },
-              { default: () => (row.progress === 100 ? "打开" : "下载") }
-            ),
+            h(DownloadButton, {
+              row,
+            }),
             h(
               NButton,
               {
@@ -132,6 +125,7 @@ const data = useObservable<ITask[]>(
 // mounted
 onMounted(() => {
   ipc.on(EVENTS.REPLY_DOWNLOAD_FILE, (data: ITask) => {
+    data.pending = false;
     db.tasks.put(data);
   });
   ipc.on(EVENTS.REPLY_OPEN_FILE_IN_DIR, (res: IpcResponseDTO<boolean>) => {
@@ -141,13 +135,6 @@ onMounted(() => {
   });
 });
 // methods
-const handleDownloadOrOpen = (row: ITask) => {
-  if (row.progress === 100) {
-    ipcInstance.send(EVENTS.OPEN_FILE_IN_DIR, row);
-  } else {
-    ipcInstance.send(EVENTS.DOWNLOAD_FILE, row);
-  }
-};
 const handleDelete = (row: ITask) => {
   db.tasks.delete(row.id);
 };
