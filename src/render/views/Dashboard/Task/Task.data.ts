@@ -1,5 +1,5 @@
 import { CommonDTO } from "@common/dto";
-import { IConfig, ITask } from "@render/db";
+import { IConfig, ITask } from "@common/types";
 import { ConfigForm } from "../Config/Config.data";
 
 /* A class that represents a task. */

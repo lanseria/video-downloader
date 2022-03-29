@@ -1,4 +1,3 @@
-import { ITask } from "@render/db";
 import { ExecaChildProcess } from "execa";
 import { YtResponse, create as createYoutubeDl } from "youtube-dl-exec";
 import * as path from "path";

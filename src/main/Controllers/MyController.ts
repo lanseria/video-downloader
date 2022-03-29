@@ -5,12 +5,13 @@ import { YtResponse, create as createYoutubeDl } from "youtube-dl-exec";
 import { ImportJson, IpcResponseDTO, OpenedFolderData } from "@common/dto";
 import { readFile, writeJson } from "@main/utils/fs";
 import { FileService } from "@main/Services/FileService";
-import { ITask } from "@render/db";
 import * as path from "path";
 import * as fs from "fs";
 import axios from "axios";
-import { convertBytes, getDownloadInfo } from "@main/utils";
+import { convertBytes } from "@main/utils";
 import { shell } from "electron";
+import { getDownloadInfo } from "@main/utils/youtube";
+import { ITask } from "@common/types";
 // YOUTUBEDL
 const youtubedl = createYoutubeDl(path.join("./", "youtube-dl"));
 @Controller()
