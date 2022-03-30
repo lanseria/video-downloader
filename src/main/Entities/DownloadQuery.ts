@@ -8,31 +8,46 @@ const youtubedl = createYoutubeDl(path.join("./", "youtube-dl"));
 
 export class DownloadQuery {
   id: string;
+  // 进程
   process: ExecaChildProcess<string>;
+  // 下载地址
   url: string;
+  // 文件名
   title: string;
+  // 后缀名
+  ext: string;
+  // youtube-dl-exec 配置
   config: IObj;
+  // 是否已经停止
   stopped: boolean;
-  constructor(id: string, url: string, title: string, config: IObj) {
+  // 初始化
+  constructor(
+    id: string,
+    url: string,
+    title: string,
+    ext: string,
+    config: IObj
+  ) {
     this.id = id;
     this.process = null;
     this.url = url;
     this.title = title;
+    this.ext = ext;
     this.config = config;
     this.stopped = false;
   }
-
-  stop() {
+  // 停止
+  stopProcess() {
     this.stopped = true;
     if (this.process !== null) {
       this.process.cancel();
     }
   }
-
-  start(cb) {
+  // 下载
+  startProcess(cb) {
     if (this.stopped) return cb(null, "killed");
     this.process = youtubedl.exec(this.url, {
-      output: path.join(this.config.dist, `${this.title}.mp4`),
+      output: path.join(this.config.dist, `${this.title}.${this.ext}`),
       proxy: this.config.proxy || undefined,
     });
     console.log(`Running subprocess as ${this.process.pid}`);

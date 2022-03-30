@@ -8,7 +8,7 @@ export interface IpcResponse<T> {
 }
 
 export interface ICommon {
-  id?: number; // Primary key. Optional (autoincremented)
+  id?: number | string; // Primary key. Optional (autoincremented)
   updatedAt: number;
 }
 export interface IConfig extends ICommon {
@@ -22,6 +22,7 @@ export interface IConfig extends ICommon {
 }
 
 export interface ITask extends ICommon {
+  id: string;
   title: string;
   progress: number;
   webpage_url: string;

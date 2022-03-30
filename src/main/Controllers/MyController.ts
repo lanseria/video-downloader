@@ -7,16 +7,20 @@ import { readFile, writeJson } from "@main/utils/fs";
 import { FileService } from "@main/Services/FileService";
 import * as path from "path";
 import * as fs from "fs";
-import axios from "axios";
-import { convertBytes } from "@main/utils";
+import * as os from "os";
 import { shell } from "electron";
 import { getDownloadInfo } from "@main/utils/youtube";
 import { ITask } from "@common/types";
+import { AxiosQuery } from "@main/Entities/AxiosQuery";
+import { DownloadQuery } from "@main/Entities/DownloadQuery";
 // YOUTUBEDL
 const youtubedl = createYoutubeDl(path.join("./", "youtube-dl"));
 @Controller()
 export class MyController {
-  constructor(private myService: MyService, private fileService: FileService) {}
+  downloadQueryList: DownloadQuery[] = [];
+  constructor(private myService: MyService, private fileService: FileService) {
+    this.downloadQueryList = [];
+  }
 
   @IpcOn(EVENTS.REPLY_EXEC_PRELOAD)
   public replyExecPreload(data: boolean = null, err = null) {
@@ -94,41 +98,16 @@ export class MyController {
     const URL_PREFIX = "https://mirror.ghproxy.com/";
     const URL_GITHUB =
       "https://github.com/ytdl-org/youtube-dl/releases/download/2021.12.17/";
+    const urlPrefix = URL_PREFIX + URL_GITHUB;
     const unix = "youtube-dl";
     const win = "youtube-dl.exe";
-    const downloadToDist = async (filename: string) => {
-      const writer = fs.createWriteStream(path.join("./", filename));
-      const { data, headers } = await axios.get(
-        URL_PREFIX + URL_GITHUB + filename,
-        {
-          responseType: "stream",
-        }
-      );
-      const totalLength = +headers["content-length"];
-      const total = convertBytes(totalLength);
-      let received = 0;
-      return await new Promise((resolve, reject) => {
-        let error = null;
-        data.on("data", (chunk) => {
-          received += chunk.length;
-          const percentage = ((received / totalLength) * 100).toFixed(0) + "%";
-          this.replyExecDownload(`${filename}: ${percentage} of ${total}`);
-        });
-        writer.on("error", (err) => {
-          error = err;
-          reject(err);
-        });
-        writer.on("close", async () => {
-          if (!error) {
-            resolve(true);
-          }
-        });
-        data.pipe(writer);
-      });
-    };
+    const filename = os.platform() === "win32" ? win : unix;
+    const url = os.platform() === "win32" ? urlPrefix + win : urlPrefix + unix;
     try {
-      await downloadToDist(unix);
-      await downloadToDist(win);
+      const axiosQuery = new AxiosQuery(filename, url);
+      await axiosQuery.download((data, err) => {
+        this.replyExecDownload(data, err);
+      });
       await this.handleExecPreload();
     } catch (error) {
       console.log(error);
@@ -217,44 +196,20 @@ export class MyController {
 
   @IpcInvoke(EVENTS.DOWNLOAD_FILE)
   public async handleDownloadFile(row: ITask) {
-    const subprocess = youtubedl.exec(row.webpage_url, {
-      output: path.join(row.config.dist, `${row.title}.mp4`),
-      proxy: row.config.proxy || undefined,
-    });
-    console.log(`Running subprocess as ${subprocess.pid}`);
-    subprocess.stdout.setEncoding("utf-8");
-    subprocess.stdout.on("data", (data) => {
-      const liveData = data.toString();
-      console.log(liveData);
-      if (!liveData.includes("[download]")) return;
-
-      let liveDataArray = liveData.split(" ").filter((el) => {
-        return el !== "";
-      });
-      if (liveDataArray.length > 10) return;
-      liveDataArray = liveDataArray.filter((el) => {
-        return el !== "\n";
-      });
-      let percentage: string = liveDataArray[1];
-      let speed: string = liveDataArray[5];
-      let eta: string = liveDataArray[7];
-      if (percentage === "100%") {
+    const downloadQuery = new DownloadQuery(
+      row.id,
+      row.webpage_url,
+      row.title,
+      "mp4",
+      row.config
+    );
+    this.downloadQueryList.push(downloadQuery);
+    downloadQuery.startProcess((data, err) => {
+      if (data) {
+        this.replyDownloadFile(data);
       } else {
-        // console.log(percentage, speed, eta);
-        this.replyDownloadFile({
-          ...row,
-          progress: +percentage.split("%")[0],
-          speed,
-          eta,
-        });
+        console.log(err);
       }
-    });
-
-    subprocess.stdout.on("close", () => {
-      if (subprocess.killed) {
-        console.log("killed");
-      }
-      console.log("done");
     });
   }
 
