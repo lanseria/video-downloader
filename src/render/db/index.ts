@@ -17,3 +17,29 @@ export class DashboardDatabase extends Dexie {
 }
 
 export const db = new DashboardDatabase();
+
+// 重新进入后，任务全部暂停
+db.transaction("rw", db.tasks, async () => {
+  // Transaction Scope
+  db.tasks.each((task) => {
+    db.tasks
+      .update(task.id, {
+        pending: true,
+      })
+      .then((updated) => {
+        if (updated) {
+          console.log("Task updated");
+        } else {
+          console.log("Task not updated");
+        }
+      });
+  });
+})
+  .then(() => {
+    // Transaction Complete
+    console.log("Transaction committed");
+  })
+  .catch((err) => {
+    // Transaction Failed
+    console.error(err.stack);
+  });

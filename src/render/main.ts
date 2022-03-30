@@ -14,10 +14,6 @@ async function bootstrap() {
   // Configure routing
   setupRouter(app);
 
-  db.tasks.each((task) => {
-    task.pending = true;
-  });
-
   app.mount("#app", true);
 }
 
