@@ -16,12 +16,12 @@
 </template>
 <script lang="ts" setup>
 import { ipcInstance } from "@render/plugins";
-import { ITask } from "@render/db";
 import { NButton } from "naive-ui";
 import { computed, PropType, ref } from "vue";
 import { vElementHover } from "@vueuse/components";
 import { EVENTS } from "@common/events";
 import { serialize } from "@common/utils";
+import { ITask } from "@common/types";
 const props = defineProps({
   row: {
     type: Object as PropType<ITask>,
@@ -31,7 +31,7 @@ const props = defineProps({
 const hoverMap = {
   1: {
     0: "待下载",
-    1: "下载=>",
+    1: "下载",
     disabled: false,
     click: () => {
       handleDownload();
@@ -46,7 +46,7 @@ const hoverMap = {
     },
   },
   3: {
-    0: "下载中..",
+    0: "下载中",
     1: "暂停下载",
     disabled: false,
     click: () => {
@@ -55,7 +55,7 @@ const hoverMap = {
     },
   },
   4: {
-    0: "暂停中..",
+    0: "暂停中",
     1: "继续下载",
     disabled: false,
     click: () => {

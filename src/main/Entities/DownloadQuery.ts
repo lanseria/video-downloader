@@ -41,6 +41,10 @@ export class DownloadQuery {
     this.stopped = true;
     if (this.process !== null) {
       this.process.cancel();
+      return 0;
+    } else {
+      console.log("process is null");
+      return 1;
     }
   }
   // 下载
@@ -81,7 +85,7 @@ export class DownloadQuery {
 
     this.process.stdout.on("close", () => {
       if (this.process.killed) {
-        console.log("killed");
+        console.log("download killed");
         cb(null, "killed");
       }
       console.log("done");

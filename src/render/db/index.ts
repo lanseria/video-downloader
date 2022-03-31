@@ -3,7 +3,7 @@ import Dexie from "dexie";
 
 export class DashboardDatabase extends Dexie {
   configs!: Dexie.Table<IConfig, number>;
-  tasks!: Dexie.Table<ITask, number>;
+  tasks!: Dexie.Table<ITask, string>;
 
   constructor() {
     super("DashboardDatabase");

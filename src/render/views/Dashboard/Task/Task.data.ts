@@ -4,7 +4,7 @@ import { ConfigForm } from "../Config/Config.data";
 
 /* A class that represents a task. */
 export class TaskForm extends CommonDTO implements ITask {
-  id?: number;
+  id: string;
   updatedAt: number;
   title: string = "";
   progress: number = 0;

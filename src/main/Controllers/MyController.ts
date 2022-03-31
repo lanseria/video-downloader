@@ -81,6 +81,11 @@ export class MyController {
     return new IpcResponseDTO<boolean>(data, err);
   }
 
+  @IpcOn(EVENTS.REPLY_EXEC_PAUSE)
+  public replyExecPause(data: ITask = null, err = null) {
+    return new IpcResponseDTO<ITask>(data, err);
+  }
+
   @IpcInvoke(EVENTS.EXEC_PRELOAD)
   public async handleExecPreload() {
     try {
@@ -206,7 +211,8 @@ export class MyController {
     this.downloadQueryList.push(downloadQuery);
     downloadQuery.startProcess((data, err) => {
       if (data) {
-        this.replyDownloadFile(data);
+        const task = { ...row, ...data };
+        this.replyDownloadFile(task);
       } else {
         console.log(err);
       }
@@ -223,5 +229,24 @@ export class MyController {
   }
 
   @IpcInvoke(EVENTS.EXEC_PAUSE)
-  public handlePauseDownload(row: ITask) {}
+  public handlePauseDownload(row: ITask) {
+    const downloadQuery = this.downloadQueryList.find(
+      (item) => item.id === row.id
+    );
+    console.log(downloadQuery);
+    if (downloadQuery) {
+      const code = downloadQuery.stopProcess();
+      // 暂停下载就移除队列
+      this.downloadQueryList = this.downloadQueryList.filter(
+        (item) => item.id !== row.id
+      );
+      if (code === 0) {
+        this.replyExecPause(row);
+      } else {
+        this.replyExecPause(null, "暂停失败");
+      }
+    } else {
+      this.replyExecPause(null, "暂停失败");
+    }
+  }
 }

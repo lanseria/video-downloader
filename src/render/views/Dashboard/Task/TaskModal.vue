@@ -60,6 +60,7 @@ import { YtResponse } from "youtube-dl-exec";
 import { IpcResponseDTO } from "@common/dto";
 import TaskItem from "./TaskItem.vue";
 import ConfigModal from "../Config/ConfigModal.vue";
+import { nanoid } from "nanoid";
 
 const emit = defineEmits(["load-page"]);
 
@@ -89,7 +90,7 @@ onMounted(() => {
     if (res.data) {
       const { data } = res;
       modelRef.value.mergeProperties(data);
-      console.log(modelRef.value);
+      modelRef.value.id = nanoid();
     } else {
       window.$message.warning(res.error);
     }

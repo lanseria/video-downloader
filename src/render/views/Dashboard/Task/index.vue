@@ -51,7 +51,7 @@ import {
   ArrowUpCircleOutline as ArrowUpCircleOutlineIcon,
 } from "@vicons/ionicons5";
 import { NSpace, NButton, NDataTable, NIcon } from "naive-ui";
-import { db, ITask } from "@render/db";
+import { db } from "@render/db";
 import { useObservable } from "@vueuse/rxjs";
 import { liveQuery } from "dexie";
 import { Observable } from "rxjs";
@@ -62,6 +62,7 @@ import DownloadButton from "./DownloadButton.vue";
 import TaskItem from "./TaskItem.vue";
 import TaskProgress from "./TaskProgress.vue";
 import { IpcResponseDTO } from "@common/dto";
+import { ITask } from "@common/types";
 // useIpc
 const ipc = useIpc();
 const columns = [
@@ -90,26 +91,31 @@ const columns = [
   {
     title: "Action",
     key: "actions",
+    width: 120,
     render: (row: ITask, rowIndex: number) => {
-      return h(NSpace, null, {
-        default: () => {
-          const spaceList = [
-            h(DownloadButton, {
-              row,
-            }),
-            h(
-              NButton,
-              {
-                tertiary: true,
-                size: "small",
-                onClick: () => handleDelete(row),
-              },
-              { default: () => "删除" }
-            ),
-          ];
-          return spaceList;
-        },
-      });
+      return h(
+        NSpace,
+        { vertical: true },
+        {
+          default: () => {
+            const spaceList = [
+              h(DownloadButton, {
+                row,
+              }),
+              h(
+                NButton,
+                {
+                  tertiary: true,
+                  size: "small",
+                  onClick: () => handleDelete(row),
+                },
+                { default: () => "删除" }
+              ),
+            ];
+            return spaceList;
+          },
+        }
+      );
     },
   },
 ];
@@ -133,9 +139,13 @@ onMounted(() => {
       window.$message.warning(res.error);
     }
   });
-  ipc.on(EVENTS.REPLY_EXEC_PAUSE, (data: ITask) => {
-    data.pending = true;
-    db.tasks.put(data);
+  ipc.on(EVENTS.REPLY_EXEC_PAUSE, (res: IpcResponseDTO<ITask>) => {
+    if (res.error) {
+      window.$message.warning(res.error);
+    } else {
+      res.data.pending = true;
+      db.tasks.put(res.data);
+    }
   });
 });
 // methods
