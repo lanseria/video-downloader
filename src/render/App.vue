@@ -7,7 +7,7 @@
   >
     <n-dialog-provider>
       <n-notification-provider>
-        <n-message-provider>
+        <n-message-provider keep-alive-on-hover>
           <layout-slot></layout-slot>
         </n-message-provider>
       </n-notification-provider>

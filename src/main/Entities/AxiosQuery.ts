@@ -1,7 +1,8 @@
 import * as fs from "fs";
 import * as path from "path";
-import axios from "axios";
+import axios, { HeadersDefaults } from "axios";
 import { convertBytes } from "@main/utils";
+import { Stream } from "stream";
 
 export class AxiosQuery {
   filename: string;
@@ -13,22 +14,35 @@ export class AxiosQuery {
     this.dist = dist;
   }
 
-  async download(cb) {
-    const writer = fs.createWriteStream(path.join("./", this.filename));
-    const { data, headers } = await axios.get(this.url, {
-      responseType: "stream",
+  download(cb): Promise<string> {
+    return new Promise(async (resolve, reject) => {
+      const filePath = path.join(this.dist, this.filename);
+      const writer = fs.createWriteStream(filePath);
+      const { data, headers } = await axios.get<{
+        data: Stream;
+        headers: HeadersDefaults;
+      }>(this.url, {
+        responseType: "stream",
+      });
+      const totalLength = +headers["content-length"];
+      const total = convertBytes(totalLength);
+      let received = 0;
+      data.pipe(writer);
+      data.on("data", (chunk) => {
+        received += chunk.length;
+        const percentage = ((received / totalLength) * 100).toFixed(0) + "%";
+        cb(`${this.filename}: ${percentage} of ${total}`);
+      });
+      data.on("end", () => {
+        console.log(filePath, "download complete");
+      });
+      writer.on("error", (err) => {
+        reject(err);
+      });
+      writer.on("finish", () => {
+        console.log(filePath, "download finished");
+        resolve(filePath);
+      });
     });
-    const totalLength = +headers["content-length"];
-    const total = convertBytes(totalLength);
-    let received = 0;
-    data.on("data", (chunk) => {
-      received += chunk.length;
-      const percentage = ((received / totalLength) * 100).toFixed(0) + "%";
-      cb(`${this.filename}: ${percentage} of ${total}`);
-    });
-    writer.on("error", (err) => {
-      cb(null, err);
-    });
-    data.pipe(writer);
   }
 }

@@ -13,8 +13,9 @@ import { getDownloadInfo } from "@main/utils/youtube";
 import { ITask } from "@common/types";
 import { AxiosQuery } from "@main/Entities/AxiosQuery";
 import { DownloadQuery } from "@main/Entities/DownloadQuery";
+import { URL_GITHUB, URL_PREFIX, YOUTUBEDL_NAME } from "@main/utils/const";
 // YOUTUBEDL
-const youtubedl = createYoutubeDl(path.join("./", "youtube-dl"));
+const youtubedl = createYoutubeDl(path.join("./", YOUTUBEDL_NAME));
 @Controller()
 export class MyController {
   downloadQueryList: DownloadQuery[] = [];
@@ -94,26 +95,31 @@ export class MyController {
       });
       this.replyExecPreload(true);
     } catch (err) {
+      console.log(err);
       this.replyExecPreload(null, err.toString());
     }
   }
 
   @IpcInvoke(EVENTS.EXEC_DOWNLOAD)
   public async handleExecDownload() {
-    const URL_PREFIX = "https://mirror.ghproxy.com/";
-    const URL_GITHUB =
-      "https://github.com/ytdl-org/youtube-dl/releases/download/2021.12.17/";
     const urlPrefix = URL_PREFIX + URL_GITHUB;
-    const unix = "youtube-dl";
-    const win = "youtube-dl.exe";
+    const unix = YOUTUBEDL_NAME;
+    const win = `${YOUTUBEDL_NAME}.exe`;
     const filename = os.platform() === "win32" ? win : unix;
     const url = os.platform() === "win32" ? urlPrefix + win : urlPrefix + unix;
     try {
       const axiosQuery = new AxiosQuery(filename, url);
-      await axiosQuery.download((data, err) => {
+      const filePath = await axiosQuery.download((data, err) => {
         this.replyExecDownload(data, err);
       });
-      await this.handleExecPreload();
+      // 文件可执行
+      /* This is a way to make the file executable. */
+      fs.chmod(filePath, 0o755, (err) => {
+        if (err) console.error(err);
+        else {
+          this.handleExecPreload();
+        }
+      });
     } catch (error) {
       console.log(error);
       this.replyExecDownload(null, error);
@@ -195,6 +201,7 @@ export class MyController {
       const output = await getDownloadInfo(config);
       this.replyDownloadInfo(output);
     } catch (err) {
+      console.log("download info err", err);
       this.replyDownloadInfo(null, err.toString());
     }
   }

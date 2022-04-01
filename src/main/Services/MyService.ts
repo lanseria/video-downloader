@@ -2,8 +2,9 @@ import { Injectable } from "../decorators";
 import { YtResponse, create as createYoutubeDl } from "youtube-dl-exec";
 import * as path from "path";
 import * as fs from "fs";
+import { YOUTUBEDL_NAME } from "@main/utils/const";
 // YOUTUBEDL
-const youtubedl = createYoutubeDl(path.join("./", "youtube-dl"));
+const youtubedl = createYoutubeDl(path.join("./", YOUTUBEDL_NAME));
 
 @Injectable("MyService")
 export class MyService {

@@ -21,7 +21,7 @@ async function createWindow() {
       autoHideMenuBar: !isDev,
     });
 
-    mainWindow.maximize();
+    // mainWindow.maximize();
 
     await bootstrap(mainWindow.webContents);
 
