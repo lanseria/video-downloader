@@ -73,6 +73,13 @@ export class DownloadQuery {
       let speed: string = liveDataArray[5];
       let eta: string = liveDataArray[7];
       if (percentage === "100%") {
+        cb({
+          id: this.id,
+          progress: +percentage.split("%")[0],
+          speed: "0",
+          eta: "0",
+        });
+        console.log(percentage, speed, eta);
       } else {
         console.log(percentage, speed, eta);
         cb({
@@ -89,6 +96,12 @@ export class DownloadQuery {
         console.log("download killed");
         cb(null, "killed");
       }
+      // cb({
+      //   id: this.id,
+      //   process: 100,
+      //   speed: 0,
+      //   eta: 0,
+      // });
       console.log("done");
     });
   }

@@ -1,4 +1,4 @@
 export const YOUTUBEDL_NAME = "yt-dlp";
-export const URL_PREFIX = "https://mirror.ghproxy.com/";
-export const URL_GITHUB =
-  "https://github.com/yt-dlp/yt-dlp/releases/latest/download/";
+// doc https://doc.fastgit.org/
+export const URL_PREFIX = "https://download.fastgit.org";
+export const URL_GITHUB = "/yt-dlp/yt-dlp/releases/latest/download/";

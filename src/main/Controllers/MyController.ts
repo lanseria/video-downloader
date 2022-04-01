@@ -108,6 +108,7 @@ export class MyController {
     const filename = os.platform() === "win32" ? win : unix;
     const url = os.platform() === "win32" ? urlPrefix + win : urlPrefix + unix;
     try {
+      console.log(url);
       const axiosQuery = new AxiosQuery(filename, url);
       const filePath = await axiosQuery.download((data, err) => {
         this.replyExecDownload(data, err);

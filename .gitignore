@@ -4,3 +4,4 @@ dist
 dist-ssr
 *.local
 youtube-dl*
+yt-dlp*
