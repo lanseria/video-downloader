@@ -1,6 +1,6 @@
 {
   "name": "video-downloader",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "中文视频代理下载器",
   "main": "dist/main/index.js",
   "author": {
