@@ -9,9 +9,11 @@ process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
 let mainWindow: BrowserWindow;
 async function createWindow() {
   try {
+    console.log(join(__dirname, "../../logo.png"));
     mainWindow = new BrowserWindow({
       width: 1400,
       height: 800,
+      icon: join(__dirname, "../../logo.png"),
       webPreferences: {
         nodeIntegration: true,
         webSecurity: true,
