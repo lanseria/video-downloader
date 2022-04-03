@@ -8,8 +8,7 @@
     "email": "zhangchao564265135@hotmail.com"
   },
   "scripts": {
-    "release": "./scripts/release.sh",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
+    "release": "standard-version",
     "commit": "cz",
     "dev": "vite",
     "build": "vite build",
@@ -45,7 +44,6 @@
     "@vue/compiler-sfc": "^3.2.31",
     "chalk": "^4.1.2",
     "commitizen": "^4.2.4",
-    "conventional-changelog-cli": "^2.2.2",
     "cz-conventional-changelog": "^3.3.0",
     "electron": "^18.0.1",
     "electron-builder": "^22.14.13",
