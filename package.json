@@ -36,7 +36,7 @@
     "store": "^2.0.12",
     "vue": "^3.2.31",
     "vue-router": "^4.0.14",
-    "youtube-dl-exec": "^2.0.9"
+    "youtube-dl-exec": "github:Lanseria/yt-dlp-exec"
   },
   "devDependencies": {
     "@anatine/esbuild-decorators": "^0.2.19",

@@ -3,12 +3,13 @@ import * as path from "path";
 import axios, { HeadersDefaults } from "axios";
 import { convertBytes } from "@main/utils";
 import { Stream } from "stream";
+import { getAppDataPath } from "@main/utils/fs";
 
 export class AxiosQuery {
   filename: string;
   url: string;
-  dist: string = "./";
-  constructor(filename: string, url: string, dist: string = "./") {
+  dist: string = getAppDataPath();
+  constructor(filename: string, url: string, dist: string = getAppDataPath()) {
     this.filename = filename;
     this.url = url;
     this.dist = dist;

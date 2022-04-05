@@ -2,9 +2,10 @@ import { YtResponse, create as createYoutubeDl } from "youtube-dl-exec";
 import * as path from "path";
 import * as fs from "fs";
 import { YOUTUBEDL_NAME } from "./const";
+import { getAppDataPath } from "./fs";
 
 // YOUTUBEDL
-const youtubedl = createYoutubeDl(path.join("./", YOUTUBEDL_NAME));
+const youtubedl = createYoutubeDl(path.join(getAppDataPath(), YOUTUBEDL_NAME));
 
 /**
  * Download a jpg from a url and save it to a specified location
@@ -18,6 +19,10 @@ export const downloadJpgToDist = (
   config: IObj,
   title: string
 ): Promise<string> => {
+  console.log(url);
+  if (!url) {
+    return Promise.reject("url is null");
+  }
   const output = path.join(config.dist, `${title}.jpg`);
   // https://www.bilibili.com/video/BV1rY411J7s4?spm_id_from=333.851.b_7265636f6d6d656e64.1
   const subprocess = youtubedl.exec(url, {
@@ -100,6 +105,8 @@ export const getDownloadInfo = (config: IObj): Promise<YtResponse> => {
       proxy,
     })
       .then((output) => {
+        console.log(output);
+        output = { ...output, ...output.entries[0] };
         jpgUrl2Base64(output.thumbnail, config, output.title)
           .then((base64) => {
             output.thumbnail = base64;

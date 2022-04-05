@@ -3,8 +3,9 @@ import { YtResponse, create as createYoutubeDl } from "youtube-dl-exec";
 import * as path from "path";
 import * as fs from "fs";
 import { YOUTUBEDL_NAME } from "@main/utils/const";
+import { getAppDataPath } from "@main/utils/fs";
 // YOUTUBEDL
-const youtubedl = createYoutubeDl(path.join("./", YOUTUBEDL_NAME));
+const youtubedl = createYoutubeDl(path.join(getAppDataPath(), YOUTUBEDL_NAME));
 
 @Injectable("MyService")
 export class MyService {

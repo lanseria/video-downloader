@@ -35,7 +35,7 @@ specifiers:
   vue: ^3.2.31
   vue-router: ^4.0.14
   vue-tsc: ^0.33.9
-  youtube-dl-exec: ^2.0.9
+  youtube-dl-exec: github:Lanseria/yt-dlp-exec
 
 dependencies:
   '@vicons/ionicons5': 0.12.0
@@ -57,7 +57,7 @@ dependencies:
   store: 2.0.12
   vue: 3.2.31
   vue-router: 4.0.14_vue@3.2.31
-  youtube-dl-exec: 2.0.9
+  youtube-dl-exec: github.com/Lanseria/yt-dlp-exec/43876c60e67617b1ca2b2a0fba470bca8d47dffb
 
 devDependencies:
   '@anatine/esbuild-decorators': 0.2.19_esbuild@0.14.30
@@ -4662,8 +4662,10 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /youtube-dl-exec/2.0.9:
-    resolution: {integrity: sha512-HpEfQw0+Uup4R5mhur6abZspt5erM0WfdroVg30cGu0K6mH8RZbMpw/dv8ORfeiWYUYfon/25N+0XhHZpnvG2w==}
+  github.com/Lanseria/yt-dlp-exec/43876c60e67617b1ca2b2a0fba470bca8d47dffb:
+    resolution: {commit: 43876c60e67617b1ca2b2a0fba470bca8d47dffb, repo: git+ssh://git@github.com/Lanseria/yt-dlp-exec.git, type: git}
+    name: youtube-dl-exec
+    version: 2.0.9
     engines: {node: '>= 12'}
     requiresBuild: true
     dependencies:

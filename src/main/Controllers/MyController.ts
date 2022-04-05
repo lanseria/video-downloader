@@ -3,7 +3,7 @@ import { MyService } from "../Services/MyService";
 import { EVENTS } from "@common/events";
 import { YtResponse, create as createYoutubeDl } from "youtube-dl-exec";
 import { ImportJson, IpcResponseDTO, OpenedFolderData } from "@common/dto";
-import { readFile, writeJson } from "@main/utils/fs";
+import { getAppDataPath, readFile, writeJson } from "@main/utils/fs";
 import { FileService } from "@main/Services/FileService";
 import * as path from "path";
 import * as fs from "fs";
@@ -15,7 +15,8 @@ import { AxiosQuery } from "@main/Entities/AxiosQuery";
 import { DownloadQuery } from "@main/Entities/DownloadQuery";
 import { URL_GITHUB, URL_PREFIX, YOUTUBEDL_NAME } from "@main/utils/const";
 // YOUTUBEDL
-const youtubedl = createYoutubeDl(path.join("./", YOUTUBEDL_NAME));
+
+const youtubedl = createYoutubeDl(path.join(getAppDataPath(), YOUTUBEDL_NAME));
 @Controller()
 export class MyController {
   downloadQueryList: DownloadQuery[] = [];
