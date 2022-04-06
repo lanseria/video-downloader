@@ -61,6 +61,7 @@
     }
   },
   "build": {
+    "afterPack": "./build/appimage-fix.js",
     "appId": "cn.ivhik.video-downloader",
     "productName": "Video Downloader",
     "copyright": "Copyright © 2021-2022 ivhik Lanseria",

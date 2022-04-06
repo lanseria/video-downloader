@@ -29,7 +29,7 @@ export const getAppDataPath = () => {
       );
     }
     case "win32": {
-      return path.join(process.env.APPDATA, "Your app name");
+      return path.join(process.env.APPDATA, AppName);
     }
     case "linux": {
       return path.join(process.env.HOME, `.${AppName}`);
