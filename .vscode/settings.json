@@ -7,5 +7,27 @@
     "nsis",
     "outfile",
     "postuninstall"
+  ],
+  "grammarly.overrides": [
+    {
+      "files": [
+        "**/package.json"
+      ],
+      "config": {
+        "audience": "knowledgeable",
+        "dialect": "american",
+        "domain": "general",
+        "emotions": [
+          "neutral",
+          "joyful",
+          "optimistic",
+          "respectful",
+          "friendly"
+        ],
+        "goals": [
+          "describe"
+        ]
+      }
+    }
   ]
 }

@@ -106,7 +106,10 @@ export const getDownloadInfo = (config: IObj): Promise<YtResponse> => {
     })
       .then((output) => {
         console.log(output);
-        output = { ...output, ...output.entries[0] };
+        if (output._type === 'playlist') {
+          // 目前只下载第一个视频
+          output = output.entries[0]
+        }
         jpgUrl2Base64(output.thumbnail, config, output.title)
           .then((base64) => {
             output.thumbnail = base64;
