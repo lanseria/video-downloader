@@ -34,7 +34,7 @@ jobs:
       - name: set Pnpm
         uses: pnpm/action-setup@v2.2.1
         with:
-          version: 7.0.0-rc.2
+          # remove unnecessary packages versions
           run_install: true
 
       # step2: install node env
