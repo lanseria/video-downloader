@@ -3,6 +3,7 @@
   "version": "0.5.0",
   "description": "中文视频代理下载器",
   "main": "dist/main/index.js",
+  "packageManager": "pnpm@7.0.0-rc.2",
   "author": {
     "name": "Lanseria",
     "email": "zhangchao564265135@hotmail.com"
