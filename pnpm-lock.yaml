@@ -4668,7 +4668,7 @@ packages:
     dev: true
 
   github.com/Lanseria/yt-dlp-exec/43876c60e67617b1ca2b2a0fba470bca8d47dffb:
-    resolution: {commit: 43876c60e67617b1ca2b2a0fba470bca8d47dffb, repo: git+ssh://git@github.com/Lanseria/yt-dlp-exec.git, type: git}
+    resolution: {tarball: https://codeload.github.com/Lanseria/yt-dlp-exec/tar.gz/43876c60e67617b1ca2b2a0fba470bca8d47dffb}
     name: youtube-dl-exec
     version: 2.0.9
     engines: {node: '>= 12'}
