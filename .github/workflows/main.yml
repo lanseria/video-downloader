@@ -1,7 +1,7 @@
 # main.yml
 
 # Workflow's name
-name: Build Electron App For Win/Mac/Ubuntu
+name: Build Release
 
 # Workflow's trigger
 on:
@@ -57,7 +57,7 @@ jobs:
 
       - name: cleanup artifacts for ubuntu
         if: matrix.os == 'ubuntu-latest'
-        run: npx rimraf "dist/electron/!(*.deb)"
+        run: npx rimraf "dist/electron/!(*.AppImage)"
 
       - name: cleanup artifacts for macos
         if: matrix.os == 'macos-latest'

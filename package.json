@@ -74,7 +74,24 @@
       "target": "dmg",
       "icon": "icons/icon.icns",
       "category": "public.app-category.utilities",
-      "identity": null
+      "identity": null,
+      "arch": [
+        "arm64",
+        "universal",
+        "x64"
+      ]
+    },
+    "linux": {
+      "desktop": {
+        "StartupNotify": "false",
+        "Encoding": "UTF-8",
+        "MimeType": "x-scheme-handler/deeplink"
+      },
+      "target": [
+        "AppImage",
+        "rpm",
+        "deb"
+      ]
     }
   }
 }
