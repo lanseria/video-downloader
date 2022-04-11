@@ -13,12 +13,14 @@ https://www.bilibili.com/video/BV1vq4y1v7by/
 ## Feature
 
 - [x] 视频下载
-- [x] 可执行文件检查与下载(现在只能 windows 上使用)
-  - [ ] unix 系统可执行文件权限限制
+- [x] 可执行文件检查与下载
+  - [x] unix 系统可执行文件权限限制
 - [x] 代理下载
   - [x] 图片封面代理
 - [x] 进度条
-- [ ] 多线程下载
+- [x] 多线程下载 (yt-dlp maybe support)
+- [ ] 删除下载文件
+- [ ] 删除下载文件
 
 ## How to use
 
