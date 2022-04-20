@@ -3,7 +3,7 @@
   "version": "0.5.3",
   "description": "中文视频代理下载器",
   "main": "dist/main/index.js",
-  "packageManager": "pnpm@7.0.0-rc.2",
+  "packageManager": "pnpm@7.0.0-rc.7",
   "author": {
     "name": "Lanseria",
     "email": "zhangchao564265135@hotmail.com"
@@ -47,7 +47,7 @@
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "^3.3.0",
     "electron": "^18.0.3",
-    "electron-builder": "^22.14.13",
+    "electron-builder": "^23.0.3",
     "esbuild": "^0.14.34",
     "rimraf": "^3.0.2",
     "standard-version": "^9.3.2",
