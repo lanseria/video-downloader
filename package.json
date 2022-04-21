@@ -5,8 +5,8 @@
   "main": "dist/main/index.js",
   "packageManager": "pnpm@7.0.0-rc.7",
   "author": {
-    "name": "Lanseria",
-    "email": "zhangchao564265135@hotmail.com"
+    "name": "lanseria",
+    "email": "bmc@ivhik.cn"
   },
   "scripts": {
     "release": "standard-version",
