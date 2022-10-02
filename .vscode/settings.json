@@ -6,7 +6,8 @@
     "middlewares",
     "nsis",
     "outfile",
-    "postuninstall"
+    "postuninstall",
+    "YOUTUBEDL"
   ],
   "grammarly.overrides": [
     {
